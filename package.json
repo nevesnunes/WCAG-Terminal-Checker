@@ -1,0 +1,6 @@
+{
+  "license": "MIT",
+  "dependencies": {
+    "color": "^0.7.3"
+  }
+}
