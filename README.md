@@ -2,14 +2,13 @@
 
 Outputs contrast values between colors in a supplied color scheme against it's own background and foreground colors.
 
-Information of contrast tests:
-http://accessibility.psu.edu/color/contrasthtml/
+Information of contrast tests: http://accessibility.psu.edu/color/contrasthtml/
 
-### Requirements
+## Requirements
 
 All dependencies are provided, you only need [Node.js](https://nodejs.org/) to run the script.
 
-### Example
+## Example
 
 Output for the classic xterm color scheme:
 
