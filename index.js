@@ -1,11 +1,8 @@
 // WCAG Terminal Color Scheme Checker
 //
 // Outputs contrast values between colors in a 
-// supplied color scheme against it's own
+// Xresources color scheme against it's
 // background and foreground colors.
-//
-// Information of contrast tests:
-// http://accessibility.psu.edu/color/contrasthtml/
 //
 // Usage:
 // node index.js file
@@ -83,16 +80,37 @@ var extractContrasts = function(colors) {
     return results;
 };
 
-var arrayObjectIndexOf = function(myArray, searchTerm, property) {
-    for(var i = 0, len = myArray.length; i < len; i++) {
-        if (myArray[i][property] === searchTerm) return i;
-    }
-    return -1;
-}
-
 var toUpperCaseFirstLetter = function(string) {
     return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
-}
+};
+
+var extractColorCode = function(match, definitions) {
+    var matchIndex = 2;
+    if (!match) {
+        return match;
+    }
+    if (!match[2]) {
+        matchIndex = 1;
+    }
+
+    // Translate colors formatted as rgb:rr/gg/bb
+    var formatRegex = new RegExp("rgb:([0-9a-f]{2})/([0-9a-f]{2})/([0-9a-f]{2})");
+    var formatMatch = formatRegex.exec(match[matchIndex]);
+    if (formatMatch) {
+        match[matchIndex] = "#" + 
+            formatMatch[1] + formatMatch[2] + formatMatch[3];
+    }
+
+    // Translate definitions
+    var definitionOptions = Object.keys(definitions).join("|");
+    var definitionRegex = new RegExp(".*\(" + definitionOptions  + "\)");
+    if (definitionRegex.test(match[matchIndex]) && 
+            definitions[match[matchIndex]]) {
+        match[matchIndex] = definitions[match[matchIndex]];
+    }
+
+    return match;
+};
 
 // Read file contents from argument
 var args = process.argv.slice(2);
@@ -101,24 +119,36 @@ FS.readFile(file, 'utf8', function(err, data) {
     if (err)
         throw err;
 
+    // Save definitions
+    var defineRegex = new RegExp("[^!]\\s*#define\\s*([a-zA-Z0-9_-]+)\\s*(#[0-9a-f]{6})", "gi");
+    var match;
+    var definitions = {};
+    while ((match = defineRegex.exec(data))) {
+        definitions[match[1]] = match[2];
+    }
+
     // Save all matches of color codes
-    var invertRegex = new RegExp(".*\\*reverseVideo.*true", "gi");
+    var invertRegex = new RegExp("[^!].*\\*reverseVideo.*true", "gi");
     var invertColors = invertRegex.exec(data);
-    var bgRegex = new RegExp(".*\\*background.*(#[0-9a-f]{6})", "gi");
-    var fgRegex = new RegExp(".*\\*foreground.*(#[0-9a-f]{6})", "gi");
+    var bgRegex = new RegExp("[^!].*\\*background[^#a-zA-Z0-9_-]*([#a-zA-Z0-9:/_-]+)", "gi");
+    var fgRegex = new RegExp("[^!].*\\*foreground[^#a-zA-Z0-9_-]*([#a-zA-Z0-9:/_-]+)", "gi");
     var bgResult = {
         name: "Background",
-        match: (invertColors) ? fgRegex.exec(data) : bgRegex.exec(data)
+        match: (invertColors) ? 
+            extractColorCode(fgRegex.exec(data), definitions) : 
+            extractColorCode(bgRegex.exec(data), definitions)
     };
     var fgResult = {
         name: "Foreground",
-        match: (invertColors) ? bgRegex.exec(data) : fgRegex.exec(data)
+        match: (invertColors) ? 
+            extractColorCode(bgRegex.exec(data), definitions) : 
+            extractColorCode(fgRegex.exec(data), definitions)
     };
-    var regex = new RegExp(".*\\*(color[0-9]+).*(#[0-9a-f]{6})", "gi");
-    var match;
+
+    var regex = new RegExp("[^!].*\\*(color[0-9]+)[^#a-zA-Z0-9_-]*([#a-zA-Z0-9:/_-]+)", "gi");
     var matches = [];
     while ((match = regex.exec(data))) {
-        matches.push(match);
+        matches.push(extractColorCode(match, definitions));
     }
 
     var extractContrastsForBaseColor = function(base, fgBase, matches) {
@@ -131,17 +161,16 @@ FS.readFile(file, 'utf8', function(err, data) {
             var regex = new RegExp('color', 'gi');
             var colorCode = match[1].replace(regex, '');
             var colorName = colorCodes[colorCode];
-            var fgContrast = Color(fgBase.match[1])
-                .contrast(Color(match[2]));
+            var fgContrast = Color(fgBase.match[1]).contrast(Color(match[2]));
             var fgName = (fgContrast >= minimums.aaLarge) ?
-                ((invertColors) ? 'white' : 'black') :
-                ((invertColors) ? 'black' : 'white');
-            if (colorName === 'black' && invertColors) {
+                'white' :
+                'black';
+            if (colorName === 'black') {
                 fgName = 'white';
-            } else if (colorName === 'white' && invertColors) {
+            } else if (colorName === 'white') {
                 fgName = 'black';
             }
-            var text = match[1]
+            var text = match[1];
             while (text.length < 8) {
                 text += " ";
             }
@@ -184,4 +213,5 @@ FS.readFile(file, 'utf8', function(err, data) {
 
     extractContrastsForBaseColor(bgResult, fgResult, matches);
     extractContrastsForBaseColor(fgResult, fgResult, matches);
+    console.log('');
 });
