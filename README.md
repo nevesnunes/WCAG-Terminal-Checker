@@ -2,7 +2,7 @@
 
 Outputs contrast values between colors in a Xresources color scheme against it's background and foreground colors.
 
-Information of contrast tests: http://accessibility.psu.edu/color/contrasthtml/
+Information on contrast tests: http://accessibility.psu.edu/color/contrasthtml/
 
 ## Requirements
 
