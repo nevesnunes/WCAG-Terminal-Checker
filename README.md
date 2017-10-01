@@ -11,7 +11,7 @@ All dependencies are provided, you only need [Node.js](https://nodejs.org/) to r
 ## Usage
 
 ```
-node index.js xterm
+node index.js file
 ```
 
 ## Examples
@@ -29,8 +29,3 @@ Notice how the blue color fails the contrast test against the black background. 
 **Solarized Light**:
 
 ![](solarized.png)
-
-## Limitations
-
-- Only supports themes with 16 colors
-- Colors must be formatted as `#rrggbb` or `rgb:rr/gg/bb`
