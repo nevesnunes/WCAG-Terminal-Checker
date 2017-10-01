@@ -14,6 +14,11 @@ All dependencies are provided, you only need [Node.js](https://nodejs.org/) to r
 node index.js file
 ```
 
+## Limitations
+
+- Only supports themes with 16 colors
+- Colors must be formatted as `#rrggbb` or `rgb:rr/gg/bb`
+
 ## Examples
 
 **Xterm**:
