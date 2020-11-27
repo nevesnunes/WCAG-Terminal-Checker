@@ -41,7 +41,7 @@ Notice how the blue color fails the contrast test against the black background. 
 - [adjust256colors.py - corrects contrast of 256 colors for light themes](https://github.com/nevesnunes/env/tree/master/linux/bin/adjust256colors.py)
     - Before correction:
         - <img src="./adjust256colors-before.png" width="400px" />
-    - After correction:
+    - After correction (text using higher color indexes will be readable on light backgrounds):
         - <img src="./adjust256colors-after.png" width="400px" />
 - [chriskempson/base16: An architecture for building themes](https://github.com/chriskempson/base16)
 - [Solarized - Features](https://ethanschoonover.com/solarized/#features)
