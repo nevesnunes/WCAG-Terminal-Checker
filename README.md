@@ -11,6 +11,7 @@ All dependencies are provided, you only need [Node.js](https://nodejs.org/) to r
 ## Usage
 
 ```
+# Input files: https://github.com/nevesnunes/env/tree/master/linux/.local/share/Xresources
 node index.js file
 ```
 
@@ -34,3 +35,12 @@ Notice how the blue color fails the contrast test against the black background. 
 **Solarized Light**:
 
 ![](solarized.png)
+
+## Related Work
+
+- [adjust256colors.py - corrects contrast of 256 colors for light themes](https://github.com/nevesnunes/env/tree/master/linux/bin/adjust256colors.py)
+    - Before correction: ![](./adjust256colors-before.png)
+    - After correction: ![](./adjust256colors-before.png)
+- [chriskempson/base16: An architecture for building themes](https://github.com/chriskempson/base16)
+- [Solarized - Features](https://ethanschoonover.com/solarized/#features)
+- [reasoning about colors - color spaces and styling guidelines](http://notes.neeasade.net/color-spaces.html)
