@@ -9,7 +9,6 @@
 
 // Node.js requires
 var FS = require('fs');
-var Util = require('util');
 
 var Color = require('color');
 var Colors = require('colors/safe');
@@ -45,7 +44,6 @@ var extractContrasts = function(colors) {
 
     var arr = [];
     var results = [];
-    var combinations = [];
 
     colors.forEach(function(color) {
         arr.push(Color(color));
@@ -103,7 +101,7 @@ var extractColorCode = function(match, definitions) {
 
     // Translate definitions
     var definitionOptions = Object.keys(definitions).join("|");
-    var definitionRegex = new RegExp(".*\(" + definitionOptions  + "\)");
+    var definitionRegex = new RegExp(".*(" + definitionOptions  + ")");
     if (definitionRegex.test(match[matchIndex]) && 
             definitions[match[matchIndex]]) {
         match[matchIndex] = definitions[match[matchIndex]];
@@ -174,10 +172,8 @@ FS.readFile(file, 'utf8', function(err, data) {
             while (text.length < 8) {
                 text += " ";
             }
-            var coloredName = Colors
-                ['bg' + toUpperCaseFirstLetter(colorName)]
-                [fgName]
-                (text);
+            var bgName = 'bg' + toUpperCaseFirstLetter(colorName);
+            var coloredName = Colors[bgName][fgName](text);
 
             // Build results
             var resultsString = "  " + coloredName;
@@ -188,7 +184,7 @@ FS.readFile(file, 'utf8', function(err, data) {
                 resultsString += " ";
                 resultsTextLength++;
             }
-            oldResultsStringLength = resultsString.length;
+            var oldResultsStringLength = resultsString.length;
             resultsString += match[2];
             resultsTextLength += resultsString.length - oldResultsStringLength;
             spacing++;
