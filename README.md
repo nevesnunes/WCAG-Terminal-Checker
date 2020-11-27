@@ -42,7 +42,7 @@ Notice how the blue color fails the contrast test against the black background. 
     - Before correction:
         - <img src="./adjust256colors-before.png" width="400px" />
     - After correction:
-        - <img src="./adjust256colors-before.png" width="400px" />
+        - <img src="./adjust256colors-after.png" width="400px" />
 - [chriskempson/base16: An architecture for building themes](https://github.com/chriskempson/base16)
 - [Solarized - Features](https://ethanschoonover.com/solarized/#features)
 - [reasoning about colors - color spaces and styling guidelines](http://notes.neeasade.net/color-spaces.html)
